@@ -20,50 +20,52 @@ public class followLine implements Runnable {
 		
 		RegulatedMotor leftMotor = Motor.D;
 		RegulatedMotor rightMotor = Motor.A;
-		EV3ColorSensor colorSensor = new EV3ColorSensor(SensorPort.S4);
-		EV3 ev3 = (EV3) BrickFinder.getLocal();
-		TextLCD lcd = ev3.getTextLCD();
+//		EV3ColorSensor colorSensor = new EV3ColorSensor(SensorPort.S4);
+//		EV3 ev3 = (EV3) BrickFinder.getLocal();
+//		TextLCD lcd = ev3.getTextLCD();
 		
-		// Initialize sampleFetcher
-		float redSample[];
-		SensorMode redMode = colorSensor.getRedMode();
-		redSample = new float[redMode.sampleSize()];
+//		// Initialize sampleFetcher
+//		float redSample[];
+//		SensorMode redMode = colorSensor.getRedMode();
+//		redSample = new float[redMode.sampleSize()];
 		
 		// Hard-coded values
-		leftMotor.setSpeed(600);
-		rightMotor.setSpeed(600);
 		float lower = 0.1f;
 		float upper = 0.10f;
 		
 		// Start moving the robot
 		
-		leftMotor.backward(); // backward because of gears
-		rightMotor.backward();
+//		leftMotor.backward(); // backward because of gears
+//		rightMotor.backward();
 		
-		
-		
+		colorSense colorThread = new colorSense();
+		colorThread.start();
+				
 		EV3 ev3brick = (EV3) BrickFinder.getLocal();
 
 		Keys buttons = ev3brick.getKeys();
 
 		while(buttons.getButtons() != Keys.ID_ESCAPE) {
-			redMode.fetchSample(redSample, 0);
 			
-			// Output sample data
-			lcd.clear();
-			lcd.drawString(String.valueOf(redSample[0]), 1, 3);
+
 			// Correct direction
-			if (lower <= redSample[0] && redSample[0] <= upper) {
+			if (lower <= colorThread.getValue() && colorThread.getValue() <= upper) {
 				leftMotor.setSpeed(300);
+				leftMotor.forward();
 				rightMotor.setSpeed(300);
+				rightMotor.forward();
 			}
-			else if (redSample[0] < lower) { 
+			else if (colorThread.getValue() < lower) { 
 				leftMotor.setSpeed(300);
+				leftMotor.forward();
 				rightMotor.setSpeed(100);
+				rightMotor.forward();
 			}
-			else if (redSample[0] > upper) { 
+			else if (colorThread.getValue() > upper) { 
 				leftMotor.setSpeed(100);
+				leftMotor.forward();
 				rightMotor.setSpeed(300);
+				rightMotor.forward();
 			}
 			
 			// Allow for some time before self-correcting
@@ -72,10 +74,11 @@ public class followLine implements Runnable {
 			} catch (InterruptedException e) {}
 			
 		}
+		colorThread.interrupt();
+		
 		
 		leftMotor.stop();
 		rightMotor.stop();
-		colorSensor.close();
 	
 	}
 }
