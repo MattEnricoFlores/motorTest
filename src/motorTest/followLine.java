@@ -54,16 +54,16 @@ public class followLine implements Runnable {
 			lcd.drawString(String.valueOf(redSample[0]), 1, 3);
 			// Correct direction
 			if (lower <= redSample[0] && redSample[0] <= upper) {
-				leftMotor.forward();
-				rightMotor.forward();
+				leftMotor.setSpeed(300);
+				rightMotor.setSpeed(300);
 			}
 			else if (redSample[0] < lower) { 
-				leftMotor.forward();
-				rightMotor.stop();
+				leftMotor.setSpeed(300);
+				rightMotor.setSpeed(100);
 			}
 			else if (redSample[0] > upper) { 
-				leftMotor.stop ();
-				rightMotor.forward();
+				leftMotor.setSpeed(100);
+				rightMotor.setSpeed(300);
 			}
 			
 			// Allow for some time before self-correcting
