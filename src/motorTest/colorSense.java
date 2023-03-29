@@ -28,8 +28,6 @@ public class colorSense extends Thread {
 
 		while(!Thread.currentThread().isInterrupted()) {
 		
-		
-				
 		// Initialize sampleFetcher
 				
 				redMode = colorSensor.getRedMode();
@@ -38,17 +36,13 @@ public class colorSense extends Thread {
 				redMode.fetchSample(redSample, 0);
 				colorSense.value = redSample[0];
 				
-				// Output sample data
+		// Output sample data
 				lcd.clear();
 				lcd.drawString(String.valueOf(redSample[0]), 1, 3);
 				
-				}
-			
-				
+				}		
 	}
-	
 	public float getValue() {
 		return value ;
 	}
-
 }

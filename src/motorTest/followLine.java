@@ -12,6 +12,8 @@ import lejos.robotics.RegulatedMotor;
 
 public class followLine implements Runnable {
 	
+	DataExchange DEObj;
+	
 
 
 	@Override
@@ -20,23 +22,10 @@ public class followLine implements Runnable {
 		
 		RegulatedMotor leftMotor = Motor.D;
 		RegulatedMotor rightMotor = Motor.A;
-//		EV3ColorSensor colorSensor = new EV3ColorSensor(SensorPort.S4);
-//		EV3 ev3 = (EV3) BrickFinder.getLocal();
-//		TextLCD lcd = ev3.getTextLCD();
-		
-//		// Initialize sampleFetcher
-//		float redSample[];
-//		SensorMode redMode = colorSensor.getRedMode();
-//		redSample = new float[redMode.sampleSize()];
-		
+	
 		// Hard-coded values
 		float lower = 0.1f;
 		float upper = 0.10f;
-		
-		// Start moving the robot
-		
-//		leftMotor.backward(); // backward because of gears
-//		rightMotor.backward();
 		
 		colorSense colorThread = new colorSense();
 		colorThread.start();
@@ -48,6 +37,8 @@ public class followLine implements Runnable {
 		while(buttons.getButtons() != Keys.ID_ESCAPE) {
 			
 
+			
+			if(DEObj.getCMD()==1 ) {
 			// Correct direction
 			if (lower <= colorThread.getValue() && colorThread.getValue() <= upper) {
 				leftMotor.setSpeed(300);
@@ -67,7 +58,11 @@ public class followLine implements Runnable {
 				rightMotor.setSpeed(300);
 				rightMotor.forward();
 			}
-			
+			}
+			else {
+				leftMotor.stop();
+				rightMotor.stop();
+			}
 			// Allow for some time before self-correcting
 			try {
 				Thread.sleep(50);

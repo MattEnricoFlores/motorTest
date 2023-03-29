@@ -4,6 +4,9 @@ package motorTest;
 
 public class runClass {
 	
+	private static DataExchange DE;
+	
+	
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
@@ -21,8 +24,17 @@ public class runClass {
 //		thread2.start();
 		
 		
+		
+		
 		//Line Following Thread
 		
+		//Color Sensor Thread
+//		colorSense colorThread = new colorSense();
+//		
+//		colorThread.start();
+		
+		
+		// Motor Thread
 		followLine FollowLine1 = new followLine();
 		
 		Thread thread1 = new Thread(FollowLine1);
