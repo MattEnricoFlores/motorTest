@@ -1,6 +1,6 @@
 package motorTest;
 
-public class DataExchange implements Runnable{
+public class DataExchange{
 	
 	//Obstacle Detection
 	private boolean obstacleDetected = false;
@@ -31,12 +31,8 @@ public class DataExchange implements Runnable{
 		 }
 	
 
-	@Override
-	public void run() {
-		// TODO Auto-generated method stub
-		
-	}
+}
 
 	
 
-}
+

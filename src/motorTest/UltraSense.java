@@ -1,12 +1,14 @@
 package motorTest;
 
+import lejos.hardware.Button;
+import lejos.hardware.Keys;
 import lejos.hardware.Sound;
 import lejos.hardware.port.SensorPort;
 import lejos.hardware.sensor.EV3UltrasonicSensor;
 import lejos.hardware.sensor.SensorMode;
 import lejos.robotics.SampleProvider;
 
-public class UltraSense extends Thread{
+public class UltraSense implements Runnable{
 	
 	
 	
@@ -17,13 +19,17 @@ public class UltraSense extends Thread{
 	private DataExchange DEObj;
 	
 	float objDistance[];
-	SampleProvider distanceMode =null;
 	
+	SampleProvider distanceMode = null;
+	
+	public UltraSense (DataExchange DE) {
+		DEObj = DE;
+	}
 
 	@Override
 	public void run() {
 		
-		while(!Thread.currentThread().isInterrupted()) {
+		while(Button.getButtons() != Keys.ID_ESCAPE) {
 			
 			distanceMode = obstacleSensor.getDistanceMode();
 			objDistance = new float[distanceMode.sampleSize()];
@@ -31,13 +37,12 @@ public class UltraSense extends Thread{
 			distanceMode.fetchSample(objDistance, 0);
 			UltraSense.value = objDistance[0];
 			
-			if (value > 25) {
+			if (value > 0.7) {
 				DEObj.setCMD(1);
 			}
 			else {
 				DEObj.setCMD(0);
-				Sound.twoBeeps();
-				Sound.twoBeeps();
+				//Sound.twoBeeps();
 			}
 		
 		}

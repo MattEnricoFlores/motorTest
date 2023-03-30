@@ -14,6 +14,9 @@ public class followLine implements Runnable {
 	
 	DataExchange DEObj;
 	
+	public followLine (DataExchange DE) {
+		DEObj = DE;
+	}
 
 
 	@Override
@@ -22,7 +25,8 @@ public class followLine implements Runnable {
 		
 		RegulatedMotor leftMotor = Motor.D;
 		RegulatedMotor rightMotor = Motor.A;
-	
+		
+		
 		// Hard-coded values
 		float lower = 0.1f;
 		float upper = 0.10f;
@@ -30,6 +34,7 @@ public class followLine implements Runnable {
 		colorSense colorThread = new colorSense();
 		colorThread.start();
 				
+		
 		EV3 ev3brick = (EV3) BrickFinder.getLocal();
 
 		Keys buttons = ev3brick.getKeys();
@@ -70,6 +75,7 @@ public class followLine implements Runnable {
 			
 		}
 		colorThread.interrupt();
+		
 		
 		
 		leftMotor.stop();
