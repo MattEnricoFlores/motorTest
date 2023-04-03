@@ -35,21 +35,21 @@ public class runClass {
 //		colorThread.start();
 		
 		
-		DE = new DataExchange();
+//		DE = new DataExchange();
 		
 		// Motor Thread
-		followLine FollowLine1 = new followLine(DE);
+		followLine FollowLine1 = new followLine();
 		
 		Thread thread1 = new Thread(FollowLine1);
 		
 		thread1.start();
 		
 		// Obstacle Detection Thread
-		UltraSense ultraThread = new UltraSense(DE);
-		
-		Thread thread2 = new Thread(ultraThread);
-		
-		thread2.start();
+//		UltraSense ultraThread = new UltraSense(DE);
+//		
+//		Thread thread2 = new Thread(ultraThread);
+//		
+//		thread2.start();
 
 		while(Button.getButtons() != Keys.ID_ESCAPE) {
 			

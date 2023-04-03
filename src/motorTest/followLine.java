@@ -12,11 +12,7 @@ import lejos.robotics.RegulatedMotor;
 
 public class followLine implements Runnable {
 	
-	DataExchange DEObj;
 	
-	public followLine (DataExchange DE) {
-		DEObj = DE;
-	}
 
 
 	@Override
@@ -33,17 +29,21 @@ public class followLine implements Runnable {
 		
 		colorSense colorThread = new colorSense();
 		colorThread.start();
+		UltraSense ultraSense = new UltraSense();
+		Thread sensorThread = new Thread(ultraSense);
+		sensorThread.start();
 				
 		
 		EV3 ev3brick = (EV3) BrickFinder.getLocal();
 
 		Keys buttons = ev3brick.getKeys();
+		int i =10 ;
 
 		while(buttons.getButtons() != Keys.ID_ESCAPE) {
 			
 
 			
-			if(DEObj.getCMD()==1 ) {
+			while(ultraSense.getCmd()==1 ) {
 			// Correct direction
 			if (lower <= colorThread.getValue() && colorThread.getValue() <= upper) {
 				leftMotor.setSpeed(300);
@@ -64,10 +64,30 @@ public class followLine implements Runnable {
 				rightMotor.forward();
 			}
 			}
-			else {
+			while(ultraSense.getCmd() == 0){
+				
 				leftMotor.stop();
 				rightMotor.stop();
-			}
+				try {
+					Thread.sleep(2000);
+				}catch(Exception e) {}
+				
+				while(i>0) {
+				leftMotor.setSpeed(50);
+				leftMotor.forward();
+				rightMotor.forward();
+				rightMotor.setSpeed(200);
+				i--;
+				}
+				
+				while(ultraSense.getCmd() !=1) {
+					leftMotor.setSpeed(200);
+					leftMotor.forward();
+					rightMotor.forward();
+					rightMotor.setSpeed(50);
+					}
+				}
+			
 			// Allow for some time before self-correcting
 			try {
 				Thread.sleep(50);
@@ -75,6 +95,7 @@ public class followLine implements Runnable {
 			
 		}
 		colorThread.interrupt();
+		sensorThread.interrupt();
 		
 		
 		

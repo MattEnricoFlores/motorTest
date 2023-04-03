@@ -22,14 +22,17 @@ public class UltraSense implements Runnable{
 	
 	SampleProvider distanceMode = null;
 	
-	public UltraSense (DataExchange DE) {
-		DEObj = DE;
-	}
+	private static int cmd = 1 ;
+	
+	
 
 	@Override
 	public void run() {
 		
-		while(Button.getButtons() != Keys.ID_ESCAPE) {
+		while(!Thread.currentThread().isInterrupted()) {
+			
+			
+			//Initialize Sample Fetcher
 			
 			distanceMode = obstacleSensor.getDistanceMode();
 			objDistance = new float[distanceMode.sampleSize()];
@@ -37,15 +40,19 @@ public class UltraSense implements Runnable{
 			distanceMode.fetchSample(objDistance, 0);
 			UltraSense.value = objDistance[0];
 			
-			if (value > 0.7) {
-				DEObj.setCMD(1);
+			if (value >= 0.15) {
+				cmd=1;
 			}
 			else {
-				DEObj.setCMD(0);
+				cmd=0;
 				//Sound.twoBeeps();
 			}
 		
 		}
+	}
+	
+	public int getCmd() {
+		return cmd ;
 	}
 	
 	
