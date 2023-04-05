@@ -86,7 +86,7 @@ public class followLine implements Runnable {
 					rightMotor.forward();
 					rightMotor.setSpeed(50);
 					}
-				}
+				} //set CMD to 1 again here
 			
 			// Allow for some time before self-correcting
 			try {
