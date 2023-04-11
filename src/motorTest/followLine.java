@@ -1,7 +1,10 @@
 package motorTest;
 
+import java.io.File;
+
 import lejos.hardware.BrickFinder;
 import lejos.hardware.Keys;
+import lejos.hardware.Sound;
 import lejos.hardware.ev3.EV3;
 import lejos.hardware.lcd.TextLCD;
 import lejos.hardware.motor.Motor;
@@ -38,6 +41,7 @@ public class followLine implements Runnable {
 
 		Keys buttons = ev3brick.getKeys();
 		int i =10 ;
+		int s=1;
 
 		while(buttons.getButtons() != Keys.ID_ESCAPE) {
 			
@@ -86,6 +90,13 @@ public class followLine implements Runnable {
 					rightMotor.forward();
 					rightMotor.setSpeed(50);
 					}
+				s++ ;
+				if(s>=2) {
+					System.out.println("Completed");
+					Sound.playSample(new File("VictoryBit.wav"), Sound.VOL_MAX);
+					
+				}
+				
 				} //set CMD to 1 again here
 			
 			// Allow for some time before self-correcting
