@@ -40,13 +40,16 @@ public class UltraSense implements Runnable{
 			distanceMode.fetchSample(objDistance, 0);
 			UltraSense.value = objDistance[0];
 			
-			if (value >= 0.15) {
+			
+			
+			if (value >= 0.20) {
 				cmd=1;
 			}
 			else {
 				cmd=0;
-				//Sound.twoBeeps();
+				
 			}
+			
 		
 		}
 	}

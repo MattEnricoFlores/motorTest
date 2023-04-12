@@ -1,7 +1,10 @@
 package motorTest;
 
+import java.io.File;
+
 import lejos.hardware.BrickFinder;
 import lejos.hardware.Keys;
+import lejos.hardware.Sound;
 import lejos.hardware.ev3.EV3;
 import lejos.hardware.lcd.TextLCD;
 import lejos.hardware.motor.Motor;
@@ -9,6 +12,7 @@ import lejos.hardware.port.SensorPort;
 import lejos.hardware.sensor.EV3ColorSensor;
 import lejos.hardware.sensor.SensorMode;
 import lejos.robotics.RegulatedMotor;
+import lejos.utility.Delay;
 
 public class followLine implements Runnable {
 	
@@ -37,8 +41,11 @@ public class followLine implements Runnable {
 		EV3 ev3brick = (EV3) BrickFinder.getLocal();
 
 		Keys buttons = ev3brick.getKeys();
-		int i =10 ;
-
+		File soundFile = new File("VictoryBit.wav");
+		
+		int tmp =0;
+		
+        
 		while(buttons.getButtons() != Keys.ID_ESCAPE) {
 			
 
@@ -65,30 +72,72 @@ public class followLine implements Runnable {
 			}
 			}
 			while(ultraSense.getCmd() == 0){
+				tmp++;
+				leftMotor.setSpeed(320);
+				rightMotor.setSpeed(180); 
+
+				rightMotor.forward();
+				leftMotor.forward();
+ 
+				Delay.msDelay(1000);
+				Sound.buzz();
 				
-				leftMotor.stop();
-				rightMotor.stop();
-				try {
-					Thread.sleep(2000);
-				}catch(Exception e) {}
 				
-				while(i>0) {
-				leftMotor.setSpeed(50);
+				
+				leftMotor.setSpeed(120);
+				rightMotor.setSpeed(250);
+
 				leftMotor.forward();
 				rightMotor.forward();
-				rightMotor.setSpeed(200);
-				i--;
-				}
 				
-				while(ultraSense.getCmd() !=1) {
-					leftMotor.setSpeed(200);
+				Delay.msDelay(3000); 
+				Sound.buzz();
+				
+				
+				leftMotor.setSpeed(300);
+				rightMotor.setSpeed(90);
+
+				rightMotor.forward();
+				leftMotor.forward();
+
+				Delay.msDelay(750);
+				Sound.buzz();
+				
+				if(tmp >= 2) {
+					Sound.playSample(soundFile);
+					leftMotor.setSpeed(360);
+					rightMotor.setSpeed(0);
+					
 					leftMotor.forward();
 					rightMotor.forward();
-					rightMotor.setSpeed(50);
+					Delay.msDelay(3000); 
+					
+					leftMotor.setSpeed(360);
+					rightMotor.setSpeed(0);
+					
+					leftMotor.forward();
+					rightMotor.forward();
+					Delay.msDelay(3000);
+					
+					leftMotor.setSpeed(360);
+					rightMotor.setSpeed(0);
+					
+					leftMotor.forward();
+					rightMotor.forward();
+					Delay.msDelay(3000); 
+					
+					leftMotor.setSpeed(360);
+					rightMotor.setSpeed(0);
+					
+					leftMotor.forward();
+					rightMotor.forward();  
+					
+					
 					}
-				} //set CMD to 1 again here
+				
+				 } 
 			
-			// Allow for some time before self-correcting
+			
 			try {
 				Thread.sleep(50);
 			} catch (InterruptedException e) {}
