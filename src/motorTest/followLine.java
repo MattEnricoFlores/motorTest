@@ -1,5 +1,7 @@
 package motorTest;
 
+
+
 import lejos.hardware.BrickFinder;
 import lejos.hardware.Keys;
 import lejos.hardware.ev3.EV3;
@@ -12,7 +14,6 @@ import lejos.robotics.RegulatedMotor;
 
 public class followLine implements Runnable {
 	
-	
 
 
 	@Override
@@ -21,72 +22,51 @@ public class followLine implements Runnable {
 		
 		RegulatedMotor leftMotor = Motor.D;
 		RegulatedMotor rightMotor = Motor.A;
+		EV3ColorSensor colorSensor = new EV3ColorSensor(SensorPort.S4);
+		EV3 ev3 = (EV3) BrickFinder.getLocal();
+		TextLCD lcd = ev3.getTextLCD();
 		
+		// Initialize sampleFetcher
+		float redSample[];
+		SensorMode redMode = colorSensor.getRedMode();
+		redSample = new float[redMode.sampleSize()];
 		
 		// Hard-coded values
+		leftMotor.setSpeed(600);
+		rightMotor.setSpeed(600);
 		float lower = 0.1f;
 		float upper = 0.10f;
 		
-		colorSense colorThread = new colorSense();
-		colorThread.start();
-		UltraSense ultraSense = new UltraSense();
-		Thread sensorThread = new Thread(ultraSense);
-		sensorThread.start();
-				
+		// Start moving the robot
+		
+		leftMotor.backward(); // backward because of gears
+		rightMotor.backward();
+		
+		
 		
 		EV3 ev3brick = (EV3) BrickFinder.getLocal();
 
 		Keys buttons = ev3brick.getKeys();
-		int i =10 ;
 
 		while(buttons.getButtons() != Keys.ID_ESCAPE) {
+			redMode.fetchSample(redSample, 0);
 			
-
-			
-			while(ultraSense.getCmd()==1 ) {
+			// Output sample data
+			lcd.clear();
+			lcd.drawString(String.valueOf(redSample[0]), 1, 3);
 			// Correct direction
-			if (lower <= colorThread.getValue() && colorThread.getValue() <= upper) {
+			if (lower <= redSample[0] && redSample[0] <= upper) {
 				leftMotor.setSpeed(300);
-				leftMotor.forward();
 				rightMotor.setSpeed(300);
-				rightMotor.forward();
 			}
-			else if (colorThread.getValue() < lower) { 
+			else if (redSample[0] < lower) { 
 				leftMotor.setSpeed(300);
-				leftMotor.forward();
 				rightMotor.setSpeed(100);
-				rightMotor.forward();
 			}
-			else if (colorThread.getValue() > upper) { 
+			else if (redSample[0] > upper) { 
 				leftMotor.setSpeed(100);
-				leftMotor.forward();
 				rightMotor.setSpeed(300);
-				rightMotor.forward();
 			}
-			}
-			while(ultraSense.getCmd() == 0){
-				
-				leftMotor.stop();
-				rightMotor.stop();
-				try {
-					Thread.sleep(2000);
-				}catch(Exception e) {}
-				
-				while(i>0) {
-				leftMotor.setSpeed(50);
-				leftMotor.forward();
-				rightMotor.forward();
-				rightMotor.setSpeed(200);
-				i--;
-				}
-				
-				while(ultraSense.getCmd() !=1) {
-					leftMotor.setSpeed(200);
-					leftMotor.forward();
-					rightMotor.forward();
-					rightMotor.setSpeed(50);
-					}
-				} //set CMD to 1 again here
 			
 			// Allow for some time before self-correcting
 			try {
@@ -94,13 +74,10 @@ public class followLine implements Runnable {
 			} catch (InterruptedException e) {}
 			
 		}
-		colorThread.interrupt();
-		sensorThread.interrupt();
-		
-		
 		
 		leftMotor.stop();
 		rightMotor.stop();
+		colorSensor.close();
 	
 	}
 }

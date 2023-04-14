@@ -1,12 +1,6 @@
 package motorTest;
 
-import lejos.hardware.Button;
-import lejos.hardware.Keys;
-
 public class runClass {
-	
-	private static DataExchange DE;
-	
 	
 
 	public static void main(String[] args) {
@@ -25,36 +19,21 @@ public class runClass {
 //		thread2.start();
 		
 		
+		//Line Following Thread
 		
-		
-		//Color Sensor Thread
-		
-		//Color Sensor Thread
-//		colorSense colorThread = new colorSense();
-//		
-//		colorThread.start();
-		
-		
-//		DE = new DataExchange();
-		
-		// Motor Thread
 		followLine FollowLine1 = new followLine();
 		
 		Thread thread1 = new Thread(FollowLine1);
 		
 		thread1.start();
+        
+		// Obstacle Avoidance Thread
+		avoidObstacles AvoidObstacles1 = new avoidObstacles();
+        Thread thread2 = new Thread(AvoidObstacles1);
+        thread2.start();
 		
-		// Obstacle Detection Thread
-//		UltraSense ultraThread = new UltraSense(DE);
-//		
-//		Thread thread2 = new Thread(ultraThread);
-//		
-//		thread2.start();
-
-		while(Button.getButtons() != Keys.ID_ESCAPE) {
-			
-		}
-		System.exit(0);
+		
 	}
 
 }
+
