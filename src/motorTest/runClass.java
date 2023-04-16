@@ -54,7 +54,7 @@ public class runClass {
 //		
 //		thread2.start();
 
-		
+		//test
 		
 		
 		while(Button.getButtons() != Keys.ID_ESCAPE) {
